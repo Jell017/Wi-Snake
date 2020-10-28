@@ -209,7 +209,7 @@ void tomadatos() {
 
 }
 
-//----------------------------------------------------------------------------------------cuando entra a la pagina /aver, cambia de punto de acceso a cliente
+//--------------------------------------------------------------------------cambia de punto de acceso a cliente, o de cliente en un wifi a cliente en otro wifi.
 void cambiazo( String red, String contra) {
 
   /*
