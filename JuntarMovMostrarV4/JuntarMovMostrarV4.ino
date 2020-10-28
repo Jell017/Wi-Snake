@@ -1,8 +1,9 @@
-//Cosas por hacer: HANDLES, HTML´s, EEPROM: WRITE, READ, SORT. WIFIMULTI
+//Cosas por hacer: HANDLES, HTML´s, EEPROM: WRITE, READ, SORT.
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <Ticker.h>
+#include <string.h>
 
 Ticker aver;
 
@@ -53,18 +54,168 @@ bool banderita = 0;
 
 
 
-// ---------------------------------------------------------------------------por ahora solo es una pagina inical, pero despues van a estar los formularios.
+// ----------------------------------------------------------------------------una pagina inical donde estan los formularios para cambiar el wifi.
 void tomadatos() {
-  server.send(200, "text/plain", "Hola Mundoo");
+  String pamandartomadatos = "";
+  pamandartomadatos += "   <!DOCTYPE html>\
+<html>\
+  <head>\
+    <meta http-equiv='content-type' content='text/html; charset=UTF-8'>\
+    <link rel='stylesheet'>\
+    <title>Snake</title>\
+    <style>\
+    body {\
+      background: #007F5F;\
+      font-family:Courier New;\
+      min-width: 772px;\
+    }\
+      \
+    table, th, td {\
+        border: 1px solid black;\
+        border-collapse: collapse;\
+      background: #f3f31e;\
+    }\
+      \
+    th {\
+        padding: 5px;\
+        text-align: center;\
+    }\
+      \
+    td {\
+        padding: 5px;\
+        text-align: center;\
+      width: 50%;\
+    }\
+      \
+      \
+    #Contenedor {\
+      margin: 0.5%;\
+    }\
+      \
+    #Cabecera {\
+      padding-top: 1%;\
+      padding-bottom: 1.8%;\
+      padding-right: 2.5%;\
+      padding-left: 2.5%;\
+      background-color: #1abc9c;\
+      border-right: 1px solid;\
+      border-left: 1px solid;\
+      border-top: 1px solid;\
+    }\
+      \
+    #Cuerpo {\
+      background-color: #c5e61c;;\
+      border: 1px solid;\
+      font-size: 18px;\
+      margin-bottom: 0px;\
+      padding-bottom: 35.2%;\
+    } \
+\
+    #Contenedor2{\
+      float:right;\
+      width:60%;\
+      margin-right:3.5%;\
+      border:1px solid;\
+      display:inline-block;\
+      border-radius: 8px;\
+      padding: 0.4%;\
+      background: #f3f31e;\
+    }\
+      \
+    #Expl1{       \
+      text-align:left;\
+      margin-right:25%;                        \
+    }\
+    \
+    #Expl2{       \
+      text-align:left;                              \
+    }\
+      \
+    #Form {        \
+      float:right;\
+      margin-right:3.5%;                \
+    }\
+      \
+    #Scoreboard {\
+      background: #1abc9c;\
+      float: left;\
+      margin-top: 4%;\
+      margin-left: 3.5%;\
+      margin-top: 2%;\
+      border: 1px solid;\
+      border-radius: 8px;\
+      width: 26.8%;\
+      min-width: 193px;\
+      display: inline-block;\
+    }\
+      \
+    #Contenedor3{\
+      float: left;\
+      margin-top: 3.5%;\
+      margin-left: 5.1%;\
+      border: 1px solid;\
+      width: 60%;\
+      display: inline-block;\
+      border-radius: 8px;\
+      padding: 0.4%;\
+      background: #f3f31e;\
+    }\
+      \
+    </style>\
+  </head>\
+  <body>\
+    <div id='Contenedor'>\
+      <div id='Cabecera'>\
+        <h1> Snake </h1>\
+      </div>\
+      <div id='Cuerpo'>\
+        <p>&nbsp;&nbsp; Welcome to: <i><b><u>Snake</u> <u>the</u> <u>game</u></b></i>\
+        </p>\
+        <p>&nbsp;&nbsp; Good luck have fun! </p>\
+        <div id='Contenedor2'>\
+          <div id='Expl1'>&nbsp;Por favor ingresar una red WiFi y su contraseña</div>\
+          <div id='Form'>\
+            <form action='/' method='post'> <label for='ssid'>Nombre de red:</label><br>\
+              <input id='ssid' name='ssid' type='text' autocapitalize='none'><br>\                      
+              <br>\
+              <form action='/' method='post'> <label for='contrasenia'>Contraseña:</label><br>\
+              <input id='contrasenia' name='contrasenia' type='password'><br>\    
+              <br>\
+              <input value='Aceptar' type='submit'> </form>\
+          </div>\
+        </div>\
+      </div>\
+    </div>\
+  </body>\
+</html>";
+
+  String a;
+  a = (server.arg("ssid").c_str());
+  //Serial.println(a);
+  //Serial.println("ya imprimio ssid");
+
+  String b;
+  b = (server.arg("contrasenia").c_str());
+  //Serial.println(b);
+  //Serial.println("ya imprimio contraseña");
+
+  if (a != "" && b != "")
+    cambiazo(a, b);
+
+  server.send(200, "text/html", pamandartomadatos);
   Serial.println("termino pagina toma de datos");
+
+
+
 }
 
 //----------------------------------------------------------------------------------------cuando entra a la pagina /aver, cambia de punto de acceso a cliente
-void cambiazo() {
+void cambiazo( String red, String contra) {
 
-  const char *red = "cecilia";
-  const char *contra = "murcielago";
-
+  /*
+    const char *red = "cecilia";
+    const char *contra = "murcielago";
+  */
 
 
   Serial.print("Conectando a ");
@@ -106,8 +257,8 @@ void inicio() {
 
 
 void estado() {
-  server.send(200, "text/plain", "Hola Mundoo"); 
-  
+  server.send(200, "text/plain", "Hola Mundoo");
+
   Serial.println(WiFi.status());
 }
 
@@ -120,7 +271,215 @@ String htmlHome() {
 
   String pamandarhome = "";
 
-  pamandarhome += "<!DOCTYPE html><html><head><meta http-equiv='content-type' content='text/html; charset=UTF-8'><link rel='stylesheet'><title>Snake</title><style>body {margin:0;font-family:Courier New;font-size:16px;}#Cabecera {padding:20px;margin-top:30px;background-color:#1abc9c;height:50px;border-right:1px solid;border-left:1px solid;}#Cuerpo {background-color:#007F5F;height:667px;border:1px solid;}<!  #Juego {text-align:center;padding:20px;background:#F7CB15;}  -->ul   {list-style-type: none;margin: 0;padding: 0;overflow: hidden;background-color: #333;position: fixed;top: 0;width: 100%;border-bottom:1px solid;}li  {float: left;border-right:1px solid #bbb;}li a  {display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;}li a:hover:not(.active) {background-color: #111;}.active {background-color: #4CAF50;}</style></head><body><ul><li><a class='active' href='#home'>Home</a></li><li><a href='#scoreboard'>Scoreboard</a></li><li><a href='#about'>About</a></li></ul><div id='Cabecera'><h1> Snake </h1></div><div id='Cuerpo'><p>&nbsp;&nbsp; Bienvenido al juego de la serp╔iente: </p><p>&nbsp;Ingresa tu nombre y luego presiona en el botón para comenzar eljuego</p><div id='Juego'>  </div></div></body></html>";
+
+  pamandarhome += "   <!DOCTYPE html>\
+<html>\
+  <head>\
+    <meta http-equiv='content-type' content='text/html; charset=UTF-8'>\
+    <link rel='stylesheet'>\
+    <title>Snake</title>\
+    <style>\
+    body {\
+      background: #007F5F;\
+      font-family:Courier New;\
+      min-width: 772px;\
+    }\
+      \
+    table, th, td {\
+        border: 1px solid black;\
+        border-collapse: collapse;\
+      background: #f3f31e;\
+    }\
+      \
+    th {\
+        padding: 5px;\
+        text-align: center;\
+    }\
+      \
+    td {\
+        padding: 5px;\
+        text-align: center;\
+      width: 50%;\
+    }\
+      \
+      \
+    #Contenedor {\
+      margin: 0.5%;\
+    }\
+      \
+    #Cabecera {\
+      padding-top: 1%;\
+      padding-bottom: 1.8%;\
+      padding-right: 2.5%;\
+      padding-left: 2.5%;\
+      background-color: #1abc9c;\
+      border-right: 1px solid;\
+      border-left: 1px solid;\
+      border-top: 1px solid;\
+    }\
+      \
+    #Cuerpo {\
+      background-color: #c5e61c;;\
+      border: 1px solid;\
+      font-size: 18px;\
+      margin-bottom: 0px;\
+      padding-bottom: 35.2%;\
+    } \
+\
+    #Contenedor2{\
+      float:right;\
+      width:60%;\
+      margin-right:3.5%;\
+      border:1px solid;\
+      display:inline-block;\
+      border-radius: 8px;\
+      padding: 0.4%;\
+      background: #f3f31e;\
+    }\
+      \
+    #Expl1{       \
+      text-align:left;\
+      margin-right:25%;                        \
+    }\
+    \
+    #Expl2{       \
+      text-align:left;                              \
+    }\
+      \
+    #Form {        \
+      float:right;\
+      margin-right:3.5%;                \
+    }\
+      \
+    #Scoreboard {\
+      background: #1abc9c;\
+      float: left;\
+      margin-top: 4%;\
+      margin-left: 3.5%;\
+      margin-top: 2%;\
+      border: 1px solid;\
+      border-radius: 8px;\
+      width: 26.8%;\
+      min-width: 193px;\
+      display: inline-block;\
+    }\
+      \
+    #Contenedor3{\
+      float: left;\
+      margin-top: 3.5%;\
+      margin-left: 5.1%;\
+      border: 1px solid;\
+      width: 60%;\
+      display: inline-block;\
+      border-radius: 8px;\
+      padding: 0.4%;\
+      background: #f3f31e;\
+    }\
+      \
+    </style>\
+  </head>\
+  <body>\
+    <div id='Contenedor'>\
+      <div id='Cabecera'>\
+        <h1> Snake </h1>\
+      </div>\
+      <div id='Cuerpo'>\
+        <p>&nbsp;&nbsp; Welcome to: <i><b><u>Snake</u> <u>the</u> <u>game</u></b></i>\
+        </p>\
+        <p>&nbsp;&nbsp; Good luck have fun! </p>\
+        <div id='Contenedor2'>\
+          <div id='Expl1'>&nbsp;Ingresa tu nombre y luego presiona en el botón para\
+            comenzar el juego:</div>\
+          <div id='Form'>\
+            <form action='/Home' method='post'> <label for='name'>Name:</label><br>\
+              <input id='name' name='name' maxlength='8' type='text'><br>\
+              <br>\
+              <input value='Jugar' type='submit'> </form>\
+          </div>\
+        </div>\
+        <div id='Scoreboard'>\
+          <table style='width:100%;margin-bottom: 18px;'>\
+            <caption>Puntajes</caption>\
+            <tbody>\
+              <tr>\
+                <th>Name</th>\
+                <th>Score</th>\
+              </tr>\
+              <tr>\
+                <td>HOLAHOLA\
+                </td>\
+                <td>220000\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+              <tr>\
+                <td><br>\
+                </td>\
+                <td><br>\
+                </td>\
+              </tr>\
+            </tbody>\
+          </table>\
+        </div>\
+        <div id='Contenedor3'>\
+      <h3> <u>About</u> <u>us</u> </h3>\
+      <div id='Expl2'>\
+              &nbsp;Proyecto de una materia de 6to año del instituto politécnico\
+              superior de rosario en el que hacemos cosas.\
+              No se que poner pero jaja.com\
+      </div>\
+        </div>\
+      </div>\
+    </div>\
+  </body>\
+</html>";
 
 
 
@@ -147,11 +506,11 @@ String htmlGame() {
     }
     pamandargame += '\n';
   }
-  
+
 
   //pamandargame += soyelmapa;   probar con string en vez de char
   //Serial.println(soyelmapa);
-  
+
   pamandargame += "</pre></body></html>";
   Serial.println("termino htmlGame");
   return (pamandargame);
@@ -161,17 +520,28 @@ String htmlGame() {
 //----------------------------------------------------------------------------------------MANEJO HOME
 void handleHome() {
 
-  //Rutina asociada a la direccion web "/Home"
 
-  String a;
+  String a="";
+  a = (server.arg("name").c_str());
+  Serial.println(a);
+  Serial.println("ya imprimio");
+
   if (server.args() > 0) {
     if (server.hasArg("name")) {
       a = (server.arg("name").c_str());
+      Serial.println(a);
+      Serial.println("entro al segundo if");
     }
     server.send(200, "text/html", htmlGame());
+    Serial.println("entro al primer if");
   }
 
   server.send(200, "text/html", htmlHome());
+
+  if (a != ""){
+    inicio();
+    //server.send(200, "text/html", htmlGame()); //en vez de que te redireccione a /Game, que te muestre el juego en home, pero tambien hay que cambiar en el cdf que envie a /Home en vez de /Game
+    }
 
   Serial.println("termino handleHome");
 }
@@ -228,10 +598,10 @@ void setup() {
 
   */
 
-  // desconectar el AP
-  WiFi.softAPdisconnect(0);
 
-  Serial.println(WiFi.status());
+  WiFi.softAPdisconnect(0); // desconectar el AP
+
+  //Serial.println(WiFi.status());
   //Serial.println(WL_CONNECTED); vale 3
   if (WiFi.status() != WL_CONNECTED) { //si ya esta conectado, que no cree el access point al dope.
     // poner una funcion para cambiar de red en /home si fuera necesario. no puede ser la que ya está (cambiazo) porque tiene el while que pregunta si ya esata conectado a otra red
@@ -246,12 +616,17 @@ void setup() {
     Serial.println(WiFi.softAPIP());         // Send the IP address of the ESP8266 to the computer
   }
 
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.print("Conectado a red! direccion IP ESP -> ");
+    Serial.print(WiFi.localIP()); //Imprime la IP local de ESP
+    Serial.println("/Home");
+  }
+
   //Crea una asociación entre la direccion web y las funciones que seran utilizadas
   server.on("/Home", handleHome);  //// Manejo el ingreso de datos del html
   server.on("/Game", handleGame);
   server.on("/", tomadatos);
-  server.on("/aver", cambiazo);
-  server.on("/inicio", inicio);
+  //server.on("/inicio", inicio);
   server.on("/estado", estado);
 
   server.begin(); //Inicia el servidor
@@ -324,13 +699,13 @@ void loop() {
         }
 
       case 7: {
-          htmlGame();
+          //htmlGame(); no hace falta pues cuando se llama a la funcion handle, se llama a la html
           CDF++;
           break;
         }
 
       case 8: {
-          handleHome();   //se manda la cadena a la pagina
+          handleGame();   //se manda la cadena a la pagina
           CDF++;
           break;
         }
@@ -599,8 +974,8 @@ void conversor_numero_a_caracter(int FT) {//------------------------------------
               ////soyelmapa += '\n';
               Mapa[i][n] = '|';
             }
-            else{ //Mapa[i][n] = '═';
-            //soyelmapa += "═";
+            else { //Mapa[i][n] = '═';
+              //soyelmapa += "═";
               Mapa[i][n] = '-';
             }
             break;
