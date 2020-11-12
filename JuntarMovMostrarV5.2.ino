@@ -501,8 +501,8 @@ String htmlGame() {//-----------------------------------------------------------
 <html>\
   <head>";
   if (Perdiste == 0) {
-    //pamandargame += "<script type='text/javascript'> function actualizar(){window.location.reload(true);} setInterval('actualizar()',401); </script>"; //con esto, firefox pone una ventana emergente
-    pamandargame +="<meta http-equiv='refresh'content='0.4'>";
+    pamandargame += "<script type='text/javascript'> function actualizar(){window.location=window.location;} setInterval('actualizar()',401); </script>"; //con esto, firefox pone una ventana emergente
+    //pamandargame +="<meta http-equiv='refresh'content='0.4'>";
   }
 
   pamandargame += "\
