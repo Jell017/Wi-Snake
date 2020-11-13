@@ -550,11 +550,10 @@ String htmlGame() {//-----------------------------------------------------------
       if (Perdiste == 0) {
  
     //pamandargame += "<script type='text/javascript'> function actualizar(){window.location=window.location;} setInterval('actualizar()',401); </script>";   
-    //pamandargame +="<meta http-equiv='refresh'content='0.4'>";
+    //pamandargame +="<meta http-equiv='refresh' content='0.4'>";
 
-  //intento autorefresh de div
+  //autorefresh de div
     pamandargame +="<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script> "; 
-    
     
     pamandargame+="<script type='text/javascript' >\
     $(document).ready(function(){\
@@ -583,11 +582,6 @@ String htmlGame() {//-----------------------------------------------------------
  //pamandargame+="<script type='text/javascript' >function render (){$('#Contenedor2').html('algo')}window.setInterval(render, 401);</script>";
  
   }
-  
-  /*if(perdiste==1 && porprimeravez){
-    handleGame();// para que la recargue y no tenga el autorefresh
-    
-    }*/
   
   pamandargame+="\
   </head>\
