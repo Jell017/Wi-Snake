@@ -1,6 +1,4 @@
-/* Cosas por hacer:
-    actualizar solo una division en vez de refreshear toda la pagina
-*/
+
 #include <EEPROM.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
