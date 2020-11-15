@@ -15,7 +15,7 @@ typedef struct tabla_score {
   int EEslot;
 };
 
-//iniciar el juego en el lugar correspondiente
+
 //------------------------------------------------------------------------------------Declaraciones iniciales
 int x = 16, y = 13, Direccion = 4;            //Direccion puede asumir 4 valores: 1 es arriba, 2 abajo, 3 iquierda y 4 derecha.
 int posx_Cabeza , posy_Cabeza;
@@ -59,13 +59,9 @@ String htmltomadatos() {//------------------------------------------------------
 
   String a;
   a = (server.arg("ssid").c_str());
-  //Serial.println(a);
-  //Serial.println("ya imprimio ssid");
 
   String b;
   b = (server.arg("contrasenia").c_str());
-  //Serial.println(b);
-  //Serial.println("ya imprimio contraseña");
 
   String pamandartomadatos = "";
   pamandartomadatos += "   <!DOCTYPE html>\
@@ -183,8 +179,8 @@ String htmltomadatos() {//------------------------------------------------------
         <p>&nbsp;&nbsp; Bienvenido a: <i><b><u>Snake</u> <u>the</u> <u>game</u></b></i></p>\
         <br>\
         <p>&nbsp;&nbsp; Ahora tienes dos opciones:</p><br> \
-        <p>&nbsp;Puedes quedarte jugando conectado a este wifi, yendo a la direccion  " + WiFi.softAPIP().toString() + "/Home. Pero \
-        debes saber que la red WiFi de esta placa no puede conectarse a Internet.</p>\
+        <p>&nbsp;Puedes quedarte jugando conectado a este wifi, yendo a la direccion  " + WiFi.softAPIP().toString() + "/home. Pero \
+        debes saber que la red WiFi que emite esta placa no puede conectarse a Internet.</p>\
         <br>\
         <p>&nbsp;&nbsp; O puedes conectarte a la red WiFi de tu casa, y en ese caso, poder jugar sin perder la conectividad a Internet. </p>\
         <p>&nbsp;&nbsp; Si introduces erroneamente la red WiFi o contraseña, luego de veinte segundos puedes recargar esta misma página y volver a intentarlo. </p>\
@@ -202,11 +198,7 @@ String htmltomadatos() {//------------------------------------------------------
 
   if (a != "" && b != "") {
     cambiazo(a, b);
-  }
-
-
-  if (a != "" && b != "") {
-    pamandartomadatos += "<pre>La nueva IP es " + WiFi.localIP().toString() + "/Home</pre>";
+    pamandartomadatos += "<pre>La nueva IP es " + WiFi.localIP().toString() + "/home</pre>";
   }
 
   pamandartomadatos += "\
@@ -234,22 +226,22 @@ void ejecucion_timeout() { //---------------------------------------------------
   bandera_timeout = 0;
   timeout.detach();
 
-  if (WiFi.status() != WL_CONNECTED) { //si ya esta conectado, que no cree el access point al dope.
+  if (WiFi.status() != WL_CONNECTED) { 
 
-    // para la toma de datos, la wemos es un punto de acceso
+    // para la toma de datos, la wemos funciona como un punto de acceso
     WiFi.softAP(ssid, password);             // Start the access point
     Serial.print("Access Point \"");
     Serial.print(ssid);
     Serial.println("\" started");
 
     Serial.print("IP address:\t");
-    Serial.println(WiFi.softAPIP());         // Send the IP address of the ESP8266 to the computer
+    Serial.println(WiFi.softAPIP());         // Send the IP address of the Access Point of the ESP8266 to the computer
   }
 
-  if (WiFi.status() == WL_CONNECTED) {
+  if (WiFi.status() == WL_CONNECTED) { //si ya esta conectado, que no cree el access point al dope.
     Serial.print("Conectado a red! direccion IP ESP -> ");
     Serial.print(WiFi.localIP()); //Imprime la IP local de ESP
-    Serial.println("/Home");
+    Serial.println("/home");
   }
   Serial.println("Terminó ejecucion_timeout");
 }
@@ -259,9 +251,9 @@ void cambiazo( String red, String contra) {//-----------------------------------
   Serial.print("Conectando a ");
   Serial.println(red);
 
-  WiFi.begin(red, contra);
+  WiFi.begin(red, contra); //empieza la conexión con el WiFi del hogar
   int a = 0;
-  timeout.attach(20 , banderatimeout);
+  timeout.attach(20 , banderatimeout);  //cuando pasen 20 segundos, se prende una bandera global
   while (WiFi.status() != WL_CONNECTED) //espera una conexión
   {
     if ( a == 0) {
@@ -270,7 +262,7 @@ void cambiazo( String red, String contra) {//-----------------------------------
       a = 1;
     }
     if (bandera_timeout == 1) {
-      ejecucion_timeout();
+      ejecucion_timeout(); //si pasaron 20 segundos y no se pudo conectar, crea el access point nuevamente
       break;
     }
     delay(599);
@@ -278,12 +270,11 @@ void cambiazo( String red, String contra) {//-----------------------------------
   if (WiFi.status() == WL_CONNECTED) {
     Serial.print("Conectado a red! direccion IP ESP -> ");
     Serial.print(WiFi.localIP()); //Imprime la IP local de ESP
-    Serial.println("/Home");
+    Serial.println("/home");
   }
-
   Serial.println("termino cambiazo");
-
-}
+} //es importante que al conectarse correctamente a un WiFi, no desaparezca el Access Point, de
+  //lo contrario no podría mostrarse la nueva IP.
 
 void inicio() {//--------------------------------------------------------------------------------------Inicializa serpiente
   generar_manzanas.attach(8 , generacion_manzana);
@@ -302,10 +293,6 @@ void FinJuego() {
   velocidad_serpiente.detach();
 }
 
-void estado() {
-  server.send(200, "text/plain", "Hola Mundoo");
-  Serial.println(WiFi.status());
-}
 
 String htmlHome() {//----------------------------------------------------------------------------------htmlHome
   int i = 0, j = 0;
@@ -430,7 +417,7 @@ String htmlHome() {//-----------------------------------------------------------
           <div id='Expl1'>&nbsp;Ingresa tu nombre y luego presiona en el botón para\
             comenzar el juego:</div>\
           <div id='Form'>\
-            <form action='/Home' method='post'> <label for='name'>Name:</label><br>\
+            <form action='/home' method='post'> <label for='name'>Name:</label><br>\
               <input id='name' name='name' maxlength='7' type='text'  ><br>\
               <br>\
                 <input value='Guardar nombre' type='submit'  >\
@@ -438,7 +425,7 @@ String htmlHome() {//-----------------------------------------------------------
 
   if (aaaa != "") {
 
-    pamandarhome += "<form action='/Game' method='post'> <label for='name'>Bienvenido</label><br>\
+    pamandarhome += "<form action='/game' method='post'> <label for='name'>Bienvenido</label><br>\
               <br>\
                 <input value='Jugar' type='submit'  >\
                 </form>";
@@ -569,9 +556,9 @@ String htmlGame() {//-----------------------------------------------------------
 /*
     pamandargame +="<script type='text/javascript'>\
     $(document).ready(function(){\
-     $('#Contenedor').load('/Game#Contenedor2');\
+     $('#Contenedor').load('/game#Contenedor2');\
         setInterval(function() {\
-            $('#Contenedor').load('/Game#Contenedor2');\
+            $('#Contenedor').load('/game#Contenedor2');\
         }, 400);\
     });\
  \
@@ -604,8 +591,8 @@ String htmlGame() {//-----------------------------------------------------------
     }
     pamandargame += "</pre>";
   }
-  if (Perdiste == 1) {//------------Si perdiste, no te muestra la serpiente, sino un boton para regresar a /Home
-    pamandargame +=  "<form action='/Home' method='post' style='text-align:center'> <label for='name'>Perdiste</label>\
+  if (Perdiste == 1) {//------------Si perdiste, no te muestra la serpiente, sino un boton para regresar a /home
+    pamandargame +=  "<form action='/home' method='post' style='text-align:center'> <label for='name'>Perdiste</label>\
               <br>\
               <p>Tu Score fue: " + String(NewScore.puntaje) + " </p>\
                 <input id='Form' style='margin-bottom:3%' value='Ver Scoreboards' type='submit' >\
@@ -659,19 +646,16 @@ void setup() {//----------------------------------------------------------------
   Serial.println("empieza setup");
 
   WiFi.softAPdisconnect(0); // desconectar el AP
-
-  WiFi.mode(WIFI_AP_STA); //conectarlo como ambos
+  WiFi.mode(WIFI_AP_STA); //simultaneamente en modos Station y Access Point
   //Serial.println(WiFi.status());
   //Serial.println(WL_CONNECTED); vale 3
 
-  timeout.attach(3, ejecucion_timeout); //que espere a una conexion ya existente, para no crear el ap siempre
+  timeout.attach(3, ejecucion_timeout); //que espere 3 segundos a una conexion ya existente, para no crear el ap siempre
 
-  //Crea una asociación entre la direccion web y las funciones que seran utilizadas
-  server.on("/Home", handleHome);  //// Manejo el ingreso de datos del html
-  server.on("/Game", handleGame);
+  //Crea una asociación entre la direccion web y las funciones que seran utilizadas en el sketch
+  server.on("/home", handleHome);  //// Manejo el ingreso de datos del html
+  server.on("/game", handleGame);
   server.on("/", handletomadatos);
-  //server.on("/inicio", inicio);
-  server.on("/estado", estado);
 
   server.begin(); //Inicia el servidor
 
