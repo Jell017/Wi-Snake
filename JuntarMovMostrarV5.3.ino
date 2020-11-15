@@ -226,7 +226,7 @@ void ejecucion_timeout() { //---------------------------------------------------
   bandera_timeout = 0;
   timeout.detach();
 
-  if (WiFi.status() != WL_CONNECTED) { 
+  if (WiFi.status() != WL_CONNECTED) {
 
     // para la toma de datos, la wemos funciona como un punto de acceso
     WiFi.softAP(ssid, password);             // Start the access point
@@ -274,7 +274,7 @@ void cambiazo( String red, String contra) {//-----------------------------------
   }
   Serial.println("termino cambiazo");
 } //es importante que al conectarse correctamente a un WiFi, no desaparezca el Access Point, de
-  //lo contrario no podría mostrarse la nueva IP.
+//lo contrario no podría mostrarse la nueva IP.
 
 void inicio() {//--------------------------------------------------------------------------------------Inicializa serpiente
   generar_manzanas.attach(8 , generacion_manzana);
@@ -487,7 +487,7 @@ String htmlGame() {//-----------------------------------------------------------
 <html>\
   <head>";
 
-  
+
   pamandargame += "\
   <meta http-equiv='content-type' content='text/html; charset=UTF-8'>\
     <link rel='stylesheet'>\
@@ -534,15 +534,20 @@ String htmlGame() {//-----------------------------------------------------------
     \
     </style>";
 
-      if (Perdiste == 0) {
- 
-    //pamandargame += "<script type='text/javascript'> function actualizar(){window.location=window.location;} setInterval('actualizar()',401); </script>";   
+  if (Perdiste == 0) {
+
+    //pamandargame += "<script type='text/javascript'> function actualizar(){window.location=window.location;} setInterval('actualizar()',401); </script>";
     //pamandargame +="<meta http-equiv='refresh' content='0.4'>";
 
-  //autorefresh de div
-    pamandargame +="<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script> "; 
+    if (WiFi.status() != WL_CONNECTED) { //si está conectado como AP, no tiene conexión a internet para entrar a la libreria de JQuery
+    pamandargame +="<meta http-equiv='refresh' content='0.4'>";  
+    }
     
-    pamandargame+="<script type='text/javascript' >\
+    if (WiFi.status() == WL_CONNECTED) {
+      //autorefresh de div
+      pamandargame += "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script> ";
+
+      pamandargame += "<script type='text/javascript' >\
     $(document).ready(function(){\
    refrescar();\
    $.ajaxSetup({ cache: false });\
@@ -550,27 +555,29 @@ String htmlGame() {//-----------------------------------------------------------
     function refrescar() {\
   $('#Contenedor').load('#Contenedor2', function(){});\
 }</script>";
+
+
+      //otro metodo
+      /*
+          pamandargame +="<script type='text/javascript'>\
+          $(document).ready(function(){\
+           $('#Contenedor').load('/game#Contenedor2');\
+              setInterval(function() {\
+                  $('#Contenedor').load('/game#Contenedor2');\
+              }, 400);\
+          });\
+        \
+        </script>";
+      */
+
+      //otro metodo, solo para poner algo nuevo pero no dinamico
+      //pamandargame+="<script type='text/javascript' >function render (){$('#Contenedor2').html('algo')}window.setInterval(render, 401);</script>";
+
+    }
     
-
-    //otro metodo 
-/*
-    pamandargame +="<script type='text/javascript'>\
-    $(document).ready(function(){\
-     $('#Contenedor').load('/game#Contenedor2');\
-        setInterval(function() {\
-            $('#Contenedor').load('/game#Contenedor2');\
-        }, 400);\
-    });\
- \
-</script>";
-*/
-
-//otro metodo, solo para poner algo nuevo pero no dinamico
- //pamandargame+="<script type='text/javascript' >function render (){$('#Contenedor2').html('algo')}window.setInterval(render, 401);</script>";
- 
   }
-  
-  pamandargame+="\
+
+  pamandargame += "\
   </head>\
                   <body>\
     <div id='Contenedor'>\
@@ -723,8 +730,8 @@ void loop() {//-----------------------------------------------------------------
           break;
         }
       case 7: {
-        Serial.println("caso 7 cdf");
-        
+          Serial.println("caso 7 cdf");
+
           htmlGame();//-----Se actualiza la pagina, y el autorefresh se encarga de mostrar, por eso no llamo a handle
           CDF++;
           break;
