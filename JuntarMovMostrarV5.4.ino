@@ -196,7 +196,7 @@ String htmltomadatos() {//------------------------------------------------------
     cambiazo(a, b);
     pamandartomadatos += "<pre>La nueva IP es " + WiFi.localIP().toString() + "/home</pre> \
     <br><br><br><br><p>Copia esa dirección IP. Luego, desconecta tu computadora o teléfono de la red WiFi 'WeMos Access Point', y conéctate a la red de tu casa.\
-    Luego, en un navegador, pega la nueva IP previamente copiada.</p>";
+    Después, en un navegador, pega la nueva IP previamente copiada.</p>";
   }
 
   pamandartomadatos += "\
