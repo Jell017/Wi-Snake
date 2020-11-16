@@ -1,0 +1,17 @@
+Explicacion de uso: en el caso de que sea la primera vez de uso, o cuando dispositivo no se encuentre ya configurado: con tu telefono o computadora, conectarte al wifi llamado WeMos Access Point, con la contraseña, sin tildes y todo minúscula: politecnico. En un navegador web, ir a 192.168.4.1
+Si no escontrase la dirección, ir a los ajustes de wifi, copiar la direccion IP que figura en los ajustes e ingresarla en el navegador.
+
+Debes completar los datos de usuario y contraseña de la red wifi de tu hogar. Aparecerá un cartel con la nueva direccion IP, copiarla y cerrar esa ventana. conectarte al wifi de tu hogar. En el navegador, pegar la nueva IP previamente copiada. Ingresar tu nombre para que aparezca en la tabla de resultados. Apretar jugar, y se redireccionará a la página del juego. Cuando pierdas, pulsa el botón para volver a la página anterior, donde se muestra el scoreboard actualizado.
+
+Si la placa ya fue configurada en otra oportunidad, ya debería estar conectado a tu red doméstica. En tal caso, no aparece el AP, directamente con ir a la página web (la que es del estilo 192.168.X.X/Home) en tu navegador deberia funcionar. Si te olvidaste la IP del juego: revisar el historial de busqueda del navegador. Se podría incluir un botón para que levante de nuevo el AP en esos casos. Sino, que levante el AP siempre y cuando se inicie el juego se apague para no consumir recursos.
+
+Tenes dos caminos: si estás cansado de hacer configuraciones de wifi, quédate en el AP, pero sabiendo que no tendrás internet para realizar otras cosas. Si queres jugar al snake pero no perder el acceso a internet, debes configurar un par de cosas más.
+
+Observación: la red ESP8266 no desaparecerá una vez iniciado el juego, se mantendrá para poder jugar conectado al AP, aunque no es la mejor opción. Pero si la placa se desconecta manualmente (desenchufando el cable) y luego vuelve a conectarse, no aparecerá la red AP, sino se conectará al último wifi conocido.
+
+Sin embargo, aunque el Access Point generado por la WeMos podría servir para jugar, yendo a 192.168.4.1/home, no es recomendable. El problema es que esta red es muy inestable, se desconecta de los dispositivos muy fácilmente. Además, al no estar conectado a internet, no se puede usar la librería JQuery para el refresh de sólo una div, teniendo que usar el meta refresh para actualizar la página completa; otro punto en contra es que no cargarían las imágenes adjuntadas. También habría que explicarle al usuario que tiene dos caminos para seguir en ese momento, pero despues el AP no se levantará, y no tiene sentido explicar esos detalles técnicos.
+
+
+
+
+
