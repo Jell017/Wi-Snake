@@ -365,7 +365,9 @@ String htmlHome() {//-----------------------------------------------------------
       \
     #Expl1{       \
       text-align:left;\
-      margin-right:25%;                        \
+      margin-left:1%;\
+      margin-right:5%;\
+      margin-top:1%\
     }\
     \
     #Expl2{       \
@@ -414,7 +416,7 @@ String htmlHome() {//-----------------------------------------------------------
         </p>\
         <!-- <p>&nbsp;&nbsp; Good luck have fun! </p> -->\
         <div id='Contenedor2'>\
-          <div id='Expl1' style='margin-left:1%;margin-right:5%;margin-top:1%' >Ingresa tu nombre y luego presiona en el botón para\
+          <div id='Expl1'>Ingresa tu nombre y luego presiona en el botón para\
             comenzar el juego.</div>\
           <div id='Form'>\
             <form action='/home' method='post'> <label for='name'>Nombre:</label><br>\
@@ -488,7 +490,6 @@ String htmlGame() {//-----------------------------------------------------------
   pamandargame += "   <!DOCTYPE html>\ 
 <html>\
   <head>";
-
 
   pamandargame += "\
   <meta http-equiv='content-type' content='text/html; charset=UTF-8'>\
