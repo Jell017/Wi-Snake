@@ -30,6 +30,7 @@ typedef struct tabla_score {
 
 //------------------------------------------------------------------------------------Declaraciones iniciales
 int x = 16, y = 13, Direccion = 4;            //Direccion puede asumir 4 valores: 1 es arriba, 2 abajo, 3 iquierda y 4 derecha.
+int DireccionAnterior = Direccion;  //la hago global, y que cambie en la función movimiento, pues la funcion sensor se llama cada 100 milis y movimiento cada 400.
 int posx_Cabeza , posy_Cabeza;
 int Perdiste = 0;                             //Si "Perdiste" es igual a 0 significa que el juego todavia está en curso.
 bool FT = 0;                                   //FT (First Time) al iniciar el juego es 0.
@@ -875,7 +876,8 @@ void movimiento() {//-----------------------------------------------------------
     }
     movimiento_numeros(ayudaX, ayudaY, llegoacod);//------La partida sigue su curso.
   }
-  return;
+  DireccionAnterior = Direccion;
+  //return; ponerlo en la ultima linea es lo mismo a no ponerlo, creo
 }
 
 void pregunta_manzana() {//----------------------------------------------------------------------------Se fija si hay manzanas en el mapa.
@@ -1174,44 +1176,43 @@ void sensor() {
 
   //Serial.print("\t \t \t \t \t \t \t \t \t empieza sensor "); Serial.println(Direccion);
   //String dirpalabra = "";
-  int DireccionAnterior = Direccion;
-  int DireccionTemporal = 0; //uso esto porque ya pasó que al llamar a la funcion tantas veces (cada 50 milis)
-  // no llega a entrar al if que pregunta si la direccion es invalida
 
   if (opcionmando == 0) { //si quisiera hacerlo cambiar la direccion moviendo en forma lineal:
     //no hace falta que sea brusco el movimiento, sino que se mantenga en el tiempo más de 100 milisegundos
     //Serial.print("opcion mando:"); Serial.println(opcionmando);
     accelgyro.getRotation(&gx, &gy, &gz);
 
+    if ((abs(gz) < 12000) && (abs(gx) < 12000) ) {
+      return;//para ahorrar recursos
+    }
     if (gz > 12000 && gz > abs(gx)) {
-      DireccionTemporal = 3; //dirpalabra="izquierda";
-      if ( Direccion != 4) {
-        Direccion = DireccionTemporal;
-        
+      //dirpalabra="izquierda";
+      if ( DireccionAnterior != 4) {
+        Direccion = 3;
       }
       return;
     }
     if (gz < -12000 && abs(gz) > abs(gx) ) {
-      DireccionTemporal = 4; //dirpalabra="derecha";
-      if ( Direccion != 3) {
-        Direccion = DireccionTemporal;
-        
+       //dirpalabra="derecha";
+      if ( DireccionAnterior != 3) {
+        Direccion = 4;
+
       }
       return;
     }
     if (gx < -12000 && abs(gx) > abs(gz)) {
-      DireccionTemporal = 2; //dirpalabra="abajo";
-      if ( Direccion != 1) {
-        Direccion = DireccionTemporal;
-        
+      //dirpalabra="abajo";
+      if ( DireccionAnterior != 1) {
+        Direccion = 2;
+
       }
       return;
     }
     if (gx > 12000 && gx > abs(gz)) {
-      DireccionTemporal = 1; //dirpalabra="arriba";
-      if ( Direccion != 2)
-      { Direccion = DireccionTemporal;
-        
+       //dirpalabra="arriba";
+      if ( DireccionAnterior != 2)
+      { Direccion = 1;
+
       }
       return;
     }
@@ -1221,39 +1222,37 @@ void sensor() {
   if (opcionmando == 1) { //si quisiera hacerlo cambiar la direccion manteniendo un angulo:
     //Serial.print("opcion mando:"); Serial.println(opcionmando);
     accelgyro.getAcceleration(&ax, &ay, &az);
-    if (ax > 12000) {
-      DireccionTemporal = 3; //dirpalabra="izquierda";
-      if ( Direccion != 4) {
-        Direccion = DireccionTemporal;
+    if ((abs(ay) < 10000) && (abs(ax) < 10000) ) {
+      return;//para ahorrar recursos
+    }
+    if (ax > 10000 && ax>abs(ay)) {
+     //dirpalabra="izquierda";
+      if ( DireccionAnterior != 4) {
+        Direccion = 3;
       } return;
     }
 
-    if (ax < -12000) {
-      DireccionTemporal = 4; //dirpalabra="derecha";
-      if ( Direccion != 3) {
-        Direccion = DireccionTemporal;
-        
+    if (ax < -10000 && abs(ax)>abs(ay)) {
+    //dirpalabra="derecha";
+      if ( DireccionAnterior != 3) {
+        Direccion = 4;
       }
       return;
     }
-    if (ay > 12000) {
-      DireccionTemporal = 2; //dirpalabra="abajo";
-      if ( Direccion != 1) {
-        Direccion = DireccionTemporal;
-        
+    if (ay > 10000 && ay>abs(ax)) {
+  //dirpalabra="abajo";
+      if ( DireccionAnterior != 1) {
+        Direccion = 2;
       }
       return;
     }
-    if (ay < -12000) {
-      DireccionTemporal = 1; //dirpalabra="arriba";
-      if ( Direccion != 2) {
-        Direccion = DireccionTemporal;
-        
+    if (ay < -10000 && abs(ay)>abs(ax)) {
+      //dirpalabra="arriba";
+      if ( DireccionAnterior != 2) {
+        Direccion =1;
       }
       return;
     }
   }
-
-//Serial.print("\t \t \t \t \t \t \t \t \t termina sensor "); Serial.println(Direccion);
-
+  //Serial.print("\t \t \t \t \t \t \t \t \t termina sensor "); Serial.println(Direccion);
 }
