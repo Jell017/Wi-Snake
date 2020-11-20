@@ -476,9 +476,10 @@ String htmlHome() {//----------------------------------------------htmlHome
         <div id='Contenedor3'>\
       <h3 style='margin-left:2.5%;margin-right:2.5%'> <u>About</u> <u>us</u> </h3>\
       <div id='Expl2'>\
-              <p style=margin-left:5%;margin-right:5%'>Proyecto de una materia de 6to año del instituto politécnico\
-              superior de rosario en el que hacemos cosas.\
-              No se que poner pero jaja.com</p>\
+              <p style=margin-left:5%;margin-right:5%'>El proyecto Wi-Snake está desarrollado por (de izquierda a derecha:) Uriel Salomón, Ariel Malvaso y Agustín Russo. Es nuestro trabajo final de la materia Microprocesadores, dictada en Sexto año del Instituto Politécnico\
+              Superior de Rosario, por el profesor Yamil Montoya.</p>\
+              <p style=margin-left:5%;margin-right:5%'> Consiste en el juego clásico de Snake, pero controlado por un sensor de movimiento (acelerómetro) y usando una placa WeMos para mostrarlo en una página web.\
+              </p>\
               <div align='center'><img src='http://drive.google.com/uc?export=view&id=1-yOX5tUKOmdDeL2Q05iNwMaAL7ZxWWWf'\
               style='width: 350px; height: 262.5px;'  title='Los más facheros'></div>\
       </div>\
