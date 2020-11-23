@@ -458,7 +458,7 @@ String htmlHome() {//----------------------------------------------htmlHome
 
   tabla_score tabla_ayuda;
 
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < 10; i++) {      
     tabla_ayuda = AllScores[i];
 
     pamandarhome += "\
@@ -757,7 +757,7 @@ void handleHome() {//----------------------------------------------Manejo /home
   Serial.println(server.arg("opcion"));
   if (aaaa != "") {
     //aaaa.toCharArray(NewScore.nombre, aaaa.length());//-------Guardo el nombre ingresado en NewScore
-    aaaa.toCharArray(NewScore.nombre, 9);
+    aaaa.toCharArray(NewScore.nombre, 8);                        //ENTRAN SOLO 7 POR EL MAXLENGHT. Pero quizas un caracter sea el '\0'.
     listoparainiciar = 1;
     contador=0;
   }
@@ -844,6 +844,7 @@ void loop() {//----------------------------------------------------Loop
           if (Perdiste == 1) {
             NewScore.puntaje = Score;
             comparacion_nuevo_score();
+            llenado_AllScores();
             table_sorting();
             FinJuego();
           }
@@ -1299,7 +1300,7 @@ void table_sorting() {//-------------------------------------------Ordena la mat
 
   while (b == true) { //------------------------------------Bucle que se ejecuta mientas ocurra un cambio de posicion en los datos
     b = false;
-    for (int i = 0 ; i <  filas - 1; i++) {
+    for (int i = 0 ; i <  filas - 1; i++) { //si hay 10 elementos, hago 9 comparaciones
       if (AllScores[i + 1].puntaje > AllScores[i].puntaje) {
         b = true;//-----Hay un cambio de posicion
         score_temp = AllScores[i];
