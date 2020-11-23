@@ -68,6 +68,7 @@ void loop() {
           
           llenado_AllScores();
           comparacion_nuevo_score();
+          llenado_AllScores(); //una vez que puso otros valores en la eeprom, actualiza la matriz de structs
           table_sorting();
           paso = 4;
         }
@@ -101,7 +102,7 @@ void loop() {
 
 void llenado_AllScores() {
   int filas = 10;
-  Serial.println("All eeprom:");
+  Serial.println(" \n All eeprom:");
   for (int x = 0 ; x < filas ; x++) {
     EEPROM.get( x * sizeof(tabla_score) , AllScores[x]);
     tabla_temporal=AllScores[x];
